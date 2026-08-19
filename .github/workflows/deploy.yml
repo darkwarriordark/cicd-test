@@ -29,6 +29,8 @@ jobs:
       # 2. 拉取代码 (虽然我们最后用的是服务器上的脚本，但这一步可以用于日志或构建)
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || '' }}
 
       # 3. 通过 SSH 连接到服务器并执行部署脚本
       - name: Execute deploy script on server
@@ -39,4 +41,6 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            /home/docker/deploy.sh --tag 1.0.0 --env production
+            /home/docker/deploy.sh \
+            --tag ${{ github.event.inputs.tag }} \
+            --env ${{ github.event.inputs.environment }}
