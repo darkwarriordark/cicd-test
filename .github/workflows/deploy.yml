@@ -1,0 +1,26 @@
+# .github/workflows/deploy.yml
+name: Deploy ThinkPHP 8 to Production
+
+# 1. 触发条件：当代码推送到 main 分支时触发
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 2. 拉取代码 (虽然我们最后用的是服务器上的脚本，但这一步可以用于日志或构建)
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 3. 通过 SSH 连接到服务器并执行部署脚本
+      - name: Execute deploy script on server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            /home/docker/deploy.sh
