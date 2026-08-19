@@ -1,2 +1,2 @@
 <?php
-echo 'cicd-test';
+echo 'cicd-test 123456';
