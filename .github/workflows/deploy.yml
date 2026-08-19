@@ -3,8 +3,24 @@ name: Deploy ThinkPHP 8 to Production
 
 # 1. 触发条件：当代码推送到 main 分支时触发
 on:
-  push:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main" ]
+  workflow_dispatch:
+    # 可选：定义手动触发时的输入参数
+    inputs:
+      tag:
+        description: '要部署的tag'
+        required: true
+        default: ''
+        type: string
+      environment:
+        description: '部署环境'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
 
 jobs:
   deploy:
@@ -23,4 +39,4 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            /home/docker/deploy.sh
+            /home/docker/deploy.sh --tag 1.0.0 --env production
